@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+  <ModulePrefs title="Gamifier" description="Gamifier of Application"
+    author="Muhammad Abduh Arifin" author_email="arifin@dbis.rwth-aachen.de"
+    width="200" height="600">
+
+    <Require feature="opensocial-0.8"></Require>
+    <Require feature="openapp"></Require>
+    <Require feature="dynamic-height"></Require>
+
+    <OAuth>
+      <Service name="openapp"
+        xmlns:openapp="http://www.role-project.eu/xml/openapp/opensocialext/"
+        openapp:service="http://purl.org/role/terms/spaceService"
+        openapp:permitReadAppend="http://purl.org/role/terms/data">
+        <Request method="" url=""></Request>
+        <Authorization url=""></Authorization>
+        <Access method="" url=""></Access>
+      </Service>
+    </OAuth>
+
+  </ModulePrefs>
+  <Content type="html">
+  <![CDATA[
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Video Player</title>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+  <!-- Bootstrap stylesheet import -->
+  <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  
+  <!-- import jQuery for AJAX calls -->
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <!-- import Bootstrap for responsive UI -->
+  <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+  <!-- OpenApp import -->
+  <!-- <script type="text/javascript" src="http://open-app.googlecode.com/files/openapp.js"></script> -->
+  <!-- inter widget communication library import -->
+  
+  <script type="text/javascript" src="http://CAE-Gamified.github.io/Gamification-Framework-Frontend/gamifier/js/lib/iwc.js"></script>
+  <!-- import the client library -->
+  <script type="text/javascript" src="http://CAE-Gamified.github.io/Gamification-Framework-Frontend/gamifier/js/lib/las2peerWidgetLibrary.js"></script>
+  <script type="text/javascript" src="http://CAE-Gamified.github.io/Gamification-Framework-Frontend/gamifier/js/lib/lodash.js"></script>
+  <script type="text/javascript" src="http://CAE-Gamified.github.io/Gamification-Framework-Frontend/gamifier/js/lib/oidc-widget.js"></script>
+  <!-- import application script -->
+  <script type="text/javascript" src="http://CAE-Gamified.github.io/Gamification-Framework-Frontend/gamifier/js/lib/FileSaver.js"></script>
+  <script type="text/javascript" src="http://CAE-Gamified.github.io/Gamification-Framework-Frontend/gamifier/js/client.js"></script>
+  <script type="text/javascript" src="http://CAE-Gamified.github.io/Gamification-Framework-Frontend/gamifier/js/applicationScript.js"></script>
+  <script src="https://cdn.rawgit.com/beautify-web/js-beautify/v1.6.3/js/lib/beautify.js"></script>
+</head>
+<body>
+
+  <!-- container for actual page content -->
+  <div class="container" id="login-text">
+  <h4>
+    Loading...
+  </h4>
+  </div>
+  <div class="container" id="main-content">
+    <table class="table table-striped table-bordered table-hover" id='relation'>
+     <thead class="thead-inverse">
+      <tr>
+        <th colspan="4">Event</th>
+        <th colspan="3">Action</th>
+      <tr>
+        <th>Element Type</th>
+        <th>ID Name</th>
+        <th>Cause</th>
+        <th>Function</th>
+        <th>Action</th>
+        <th>Select Action</th>
+        <th>Clear</th>
+    </thead>
+
+    <tbody>
+    </tbody>
+    </table>
+
+    <div class="form-group">
+      <input type="text" class="form-control" id="appid" placeholder="App ID">
+    </div>
+    <div class="btn-group btn-group-justified">
+      <div class="btn-group">
+        <button id="load-data" class="btn btn-default">Load Data</button>
+      </div>      
+<!--       <div class="btn-group">
+        <button id="generate-json" class="btn btn-default">Generate</button>
+      </div> -->
+      <div class="btn-group">
+        <button id="generate-repo" class="btn btn-default">Generate Repository</button>
+      </div>
+    </div>
+    <br>
+    <div class="form-group">
+      <input type="text" class="form-control" id="status" placeholder="Status..">
+    </div>
+  </div>
+</body>
+</html>
+  ]]>
+  </Content>
+
+</Module>
