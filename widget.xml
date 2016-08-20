@@ -49,15 +49,15 @@
   <!-- <script type="text/javascript" src="http://open-app.googlecode.com/files/openapp.js"></script> -->
   <!-- inter widget communication library import -->
   
-  <script type="text/javascript" src="http://CAE-Gamified.github.io/Gamification-Framework-Frontend/gamifier/js/lib/iwc.js"></script>
+  <script type="text/javascript" src="http://rwth-acis.github.io/Gamification-Gamifier-Frontend/js/lib/iwc.js"></script>
   <!-- import the client library -->
-  <script type="text/javascript" src="http://CAE-Gamified.github.io/Gamification-Framework-Frontend/gamifier/js/lib/las2peerWidgetLibrary.js"></script>
-  <script type="text/javascript" src="http://CAE-Gamified.github.io/Gamification-Framework-Frontend/gamifier/js/lib/lodash.js"></script>
-  <script type="text/javascript" src="http://CAE-Gamified.github.io/Gamification-Framework-Frontend/gamifier/js/lib/oidc-widget.js"></script>
+  <script type="text/javascript" src="http://rwth-acis.github.io/Gamification-Gamifier-Frontend/js/lib/las2peerWidgetLibrary.js"></script>
+  <script type="text/javascript" src="http://rwth-acis.github.io/Gamification-Gamifier-Frontend/js/lib/lodash.js"></script>
+  <script type="text/javascript" src="http://rwth-acis.github.io/Gamification-Gamifier-Frontend/js/lib/oidc-widget.js"></script>
   <!-- import application script -->
-  <script type="text/javascript" src="http://CAE-Gamified.github.io/Gamification-Framework-Frontend/gamifier/js/lib/FileSaver.js"></script>
-  <script type="text/javascript" src="http://CAE-Gamified.github.io/Gamification-Framework-Frontend/gamifier/js/client.js"></script>
-  <script type="text/javascript" src="http://CAE-Gamified.github.io/Gamification-Framework-Frontend/gamifier/js/applicationScript.js"></script>
+  <script type="text/javascript" src="http://rwth-acis.github.io/Gamification-Gamifier-Frontend/js/lib/FileSaver.js"></script>
+  <script type="text/javascript" src="http://rwth-acis.github.io/Gamification-Gamifier-Frontend/js/client.js"></script>
+  <script type="text/javascript" src="http://rwth-acis.github.io/Gamification-Gamifier-Frontend/js/applicationScript.js"></script>
   <script src="https://cdn.rawgit.com/beautify-web/js-beautify/v1.6.3/js/lib/beautify.js"></script>
 </head>
 <body>
