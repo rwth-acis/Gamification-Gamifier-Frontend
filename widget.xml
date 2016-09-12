@@ -90,6 +90,7 @@
 
     <div class="form-group">
       <input type="text" class="form-control" id="appid" placeholder="App ID">
+      <input type="text" class="form-control" id="newRepoName" placeholder="Repository Name">
     </div>
     <div class="btn-group btn-group-justified">
       <div class="btn-group">

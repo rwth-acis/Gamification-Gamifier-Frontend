@@ -143,7 +143,7 @@ function loadData(){
 }
 
 var getActionData = function(){
-  var endPointURL = epURL + "gamification/actions/" + appId;
+  var endPointURL = epURL + "gamification/gamifier/actions/" + appId;
   var query = "?current=1&rowCount=-1&searchPhrase=";
   return $.get(useAuthentication(endPointURL+query));
 };
@@ -297,7 +297,7 @@ var processJSONdata = function(def,data){
   repoName = repoName.replace(/ /g,"-");
   repoName = "frontendComponent-" + repoName;
   console.log("REPONAME : " + repoName);
-
+  $("#newRepoName").val(repoName);
   console.log("E2F ");
   for (var key in data.edges) {
     if (data.edges.hasOwnProperty(key)) {
@@ -489,9 +489,18 @@ function generateJSfile(generatedJSON){
   // mainScript = js_beautify(mainScript, { indent_size: 2 });
   aopScript = js_beautify(aopScript, { indent_size: 2 });
 
+  var newRepoName;
+
+  if($("#newRepoName").val()){
+    newRepoName = $("#newRepoName").val();
+  }
+  else{
+    newRepoName = repoName;
+  }
+
   // post to github
   var dataJSON = {
-    originRepositoryName: repoName, 
+    originRepositoryName: newRepoName, 
     appId : appId,
     epURL : epURL,
     aopScript : aopScript
@@ -499,7 +508,7 @@ function generateJSfile(generatedJSON){
   $("#status").val("Uploading files...");
   var dataJSON = JSON.stringify(dataJSON); 
   $.post(
-    useAuthentication(epURL + "gamification/applications/repo"),
+    useAuthentication(epURL + "gamification/gamifier/repo"),
     dataJSON,
     function(data, status){
       console.log("Github upload success");
