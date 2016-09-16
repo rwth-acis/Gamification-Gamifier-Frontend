@@ -49,7 +49,7 @@
   <!-- <script type="text/javascript" src="http://open-app.googlecode.com/files/openapp.js"></script> -->
   <!-- inter widget communication library import -->
   
-  <script type="text/javascript" src="http://rwth-acis.github.io/Gamification-Gamifier-Frontend/js/lib/iwc.js"></script>
+   <script type="text/javascript" src="http://rwth-acis.github.io/Gamification-Gamifier-Frontend/js/lib/iwc.js"></script>
   <!-- import the client library -->
   <script type="text/javascript" src="http://rwth-acis.github.io/Gamification-Gamifier-Frontend/js/lib/las2peerWidgetLibrary.js"></script>
   <script type="text/javascript" src="http://rwth-acis.github.io/Gamification-Gamifier-Frontend/js/lib/lodash.js"></script>
@@ -68,7 +68,9 @@
     Loading...
   </h4>
   </div>
-  <div class="container" id="main-content">
+  <div class="form-group container" id="main-content">
+
+     <div style="width:100%; height:330px; overflow:auto;">
     <table class="table table-striped table-bordered table-hover" id='relation'>
      <thead class="thead-inverse">
       <tr>
@@ -87,27 +89,36 @@
     <tbody>
     </tbody>
     </table>
+  </div>
+
+ <!--    <div class="form-group">
+     <button class="text-center" id="clearall" class="btn btn-default">Clear all</button>
+    </div>-->
 
     <div class="form-group">
-      <input type="text" class="form-control" id="appid" placeholder="App ID">
-      <input type="text" class="form-control" id="newRepoName" placeholder="Repository Name">
-    </div>
-    <div class="btn-group btn-group-justified">
-      <div class="btn-group">
-        <button id="load-data" class="btn btn-default">Load Data</button>
-      </div>      
-<!--       <div class="btn-group">
-        <button id="generate-json" class="btn btn-default">Generate</button>
-      </div> -->
-      <div class="btn-group">
-        <button id="generate-repo" class="btn btn-default">Generate Repository</button>
+      <div class="input-group">
+        <span class="input-group-btn">
+          <button id="load-data" class="btn btn-secondary" type="button">Load Data</button>
+        </span>
+        <input type="text" class="form-control" id="appid" placeholder="App ID">
       </div>
     </div>
-    <br>
+    <div class="form-group">
+    <label><input type="checkbox" id="generate-space" value="false" title="Existing space will be overwritten">Generate Space</label>
+     <label><a style="cursor:pointer;" id="urlSpace" target="_blank"></a></label>
+     <div class="input-group">
+        <span class="input-group-btn">
+          <button id="generate-repo" class="btn btn-secondary" type="button">Generate</button>
+        </span>
+        <input type="text" class="form-control" id="newRepoName" placeholder="Repository Name">
+      </div>
+    </div>
     <div class="form-group">
       <input type="text" class="form-control" id="status" placeholder="Status..">
+     </div>
+    <div>
+     <label>URL Repo: <a style="cursor:pointer;" id="urlRepo" target="_blank"></a></label>
     </div>
-  </div>
 </body>
 </html>
   ]]>

@@ -33,7 +33,10 @@
  // global variables
 var client,
     appId,
-    epURL = "http://localhost:8081/",
+    epURL = "http://gaudi.informatik.rwth-aachen.de:8081/",
+    roleURL = "http://gaudi.informatik.rwth-aachen.de:8073/",
+    gitHubURLGroup = "https://github.com/CAE-Gamified/",
+    visualizationWidgetURL = "http://rwth-acis.github.io/Gamification-Visualization-Frontend/widget.xml",
     eventdata = [],
     actiondata = [],
     feedbackTimeout,
@@ -136,19 +139,21 @@ function loadData(){
   appId = $("#appid").val();
   console.log("GET JSON");
   $.when(getActionData(),getModelData()).done(function(adata,jdata){
-    renderTable(adata[0].rows,jdata);
+    renderTable(adata[0],jdata);
   }).fail(function(error){
-    feedback("Error retrieving actions and event. " + error.responseText);
+    feedback("Error retrieving actions and event. " + error);
   });
 }
 
 var getActionData = function(){
   var endPointURL = epURL + "gamification/gamifier/actions/" + appId;
-  var query = "?current=1&rowCount=-1&searchPhrase=";
-  return $.get(useAuthentication(endPointURL+query));
+  //var query = "?current=1&rowCount=-1&searchPhrase=";
+  feedback("Get Action Data");
+  return $.get(useAuthentication(endPointURL));
 };
 
 var getModelData = function() {
+  feedback("Get Model Data");
   var d = $.Deferred();
     openapp.resource.get(openapp.param.space(), (function(space){
       console.log("Space " + JSON.stringify(space));
@@ -250,6 +255,14 @@ var tableListener = function(){
       $(node).html("");
     });
   });
+  // $("#clearall")on("click",function(e){
+  //   console.log("clear all");
+  //   var actionNodes = $("tbody").find(".action");
+  //   _.forEach(actionNodes,function(node){
+  //   console.log(node);
+  //     $(node).html("");
+  //   });
+  // });
 };
 
 var simplifyJSONdata = function(jsondata){
@@ -425,9 +438,6 @@ var processJSONdata = function(def,data){
 function generateJSfile(generatedJSON){
   // Get frontendcomponent repo name
   // Post and push to github
-  var URL_aop_library = "https://dl.dropboxusercontent.com/u/57683747/CAE-Example/whiteboard/gamification/aop.pack.js";
-  var URL_oidc_widget = "https://dl.dropboxusercontent.com/u/57683747/CAE-Example/whiteboard/gamification/oidc-widget.js";
-
   var aopScript = "";
 
   _.forEach(generatedJSON,function(JSONdata){
@@ -439,54 +449,6 @@ function generateJSfile(generatedJSON){
       );"
   });
 
-  // var mainScript = "\
-  // var memberId, appId = '';\
-  // var advice = function(actionId){\
-  //    $.post(\
-  //   '" + epURL + "visualization/actions/'+appId+'/'+actionId+'/'+memberId,\
-  //   '',\
-  //   function(data, status){\
-  //     console.log('Trigger success : ' + actionId);\
-  //   });\
-  // };\
-  // var initGamification = function(){\
-  //   " + aopScript + "\
-  // };\
-  // function signInCallback(result){\
-  //   if(result === 'success'){\
-  //     memberId = oidc_userinfo.preferred_username;\
-  //       console.log(oidc_userinfo);\
-  //       console.log('Logged in!');\
-  //       initGamification();\
-  //   } else {\
-  //       console.log(result);\
-  //       console.log(window.localStorage['access_token']);\
-  //   }\
-  // }\
-  // function loadScript(url, callback){\
-  //     var head = document.getElementsByTagName('head')[0];\
-  //     var script = document.createElement('script');\
-  //     script.type = 'text/javascript';\
-  //     script.src = url;\
-  //     script.onreadystatechange = callback;\
-  //     script.onload = callback;\
-  //     head.appendChild(script);\
-  // }\
-  // function loadAOPLibrary(callback){\
-  //   loadScript('" + URL_aop_library + "',callback);\
-  // }\
-  // function loadOIDCWidget(){\
-  //   loadScript('" + URL_oidc_widget + "',loadLibraryCallback);\
-  // }\
-  // function loadLibraryCallback(){\
-  //   console.log('success load library');\
-  // }\
-  // $(document).ready(function () {\
-  //   loadAOPLibrary(loadOIDCWidget);\
-  // });";
-
-
-  // mainScript = js_beautify(mainScript, { indent_size: 2 });
   aopScript = js_beautify(aopScript, { indent_size: 2 });
 
   var newRepoName;
@@ -500,7 +462,8 @@ function generateJSfile(generatedJSON){
 
   // post to github
   var dataJSON = {
-    originRepositoryName: newRepoName, 
+    originRepositoryName: repoName, 
+    newRepositoryName: newRepoName,
     appId : appId,
     epURL : epURL,
     aopScript : aopScript
@@ -515,10 +478,92 @@ function generateJSfile(generatedJSON){
       feedback("Github upload success");
       //   var blob = new Blob([mainScript], {type: "text/plain;charset=utf-8"});
       // saveAs(blob, "gamifier.js");
-    });
 
+      $("a#urlRepo").html(gitHubURLGroup+repoName);
+      $("a#urlRepo").attr("href", gitHubURLGroup+repoName);
+
+      // Generate Space
+      console.log($("#generate-space").prop("checked"));
+      if($("#generate-space").prop("checked")){
+
+        generateSpace(newRepoName);
+      }
+    });
 }
 
+// Space
+
+function createSpace(spaceLabel,spaceTitle){
+    var url = roleURL + "spaces/" + spaceLabel;
+    var deferred = $.Deferred();
+    var innerDeferred = $.Deferred();
+
+    //Delete space if already exists
+    openapp.resource.get(url,function(data){
+        if(data.uri === url){
+            openapp.resource.del(url,function(){
+                innerDeferred.resolve();
+            });
+        } else {
+            innerDeferred.resolve();
+        }
+    });
+
+    //Create space
+    innerDeferred.then(function(){
+        openapp.resource.post(
+                roleURL + "spaces",
+                function(data){
+                    deferred.resolve(data.uri);
+                },{
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate":"http://purl.org/role/terms/space",
+                    "http://purl.org/dc/terms/title":spaceTitle,
+                    "http://www.w3.org/2000/01/rdf-schema#label": spaceLabel
+                }
+        );
+    });
+    return deferred.promise();
+}
+
+function addWidgetToSpace(spaceURI,widgetURL){
+    var deferred = $.Deferred();
+    openapp.resource.post(
+            spaceURI,
+            function(data){
+                deferred.resolve(data.uri);
+            },{
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate":"http://purl.org/role/terms/tool",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type":"http://purl.org/role/terms/OpenSocialGadget",
+                "http://www.w3.org/2000/01/rdf-schema#seeAlso":widgetURL
+            }
+    );
+    return deferred.promise();
+}
+
+
+function generateSpace(newRepoName){
+  console.log("Generate Space : " + newRepoName);
+  var _spaceLabel = newRepoName;
+  var _spaceURI = roleURL + "spaces/" + newRepoName;
+  var _applicationWidgetURL = "https://cae-gamified.github.io/"+newRepoName+"/widget.xml";
+
+  $.when(
+    createSpace(_spaceLabel,_spaceLabel)
+  ).then(function(){
+    return addWidgetToSpace(_spaceURI, visualizationWidgetURL)
+    .then(function(){
+      return addWidgetToSpace(_spaceURI, _applicationWidgetURL)
+      .done(function(){
+        feedback("New Space Created");
+
+        $("a#urlSpace").html(_spaceURI);
+        $("a#urlSpace").attr("href", _spaceURI);
+      }).fail(function(error){
+        feedback("Error creating new space. " + error);
+      });
+    });
+  });
+}
 
 
 $(document).ready(function() {
