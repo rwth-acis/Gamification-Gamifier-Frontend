@@ -51,11 +51,16 @@
   
    <script type="text/javascript" src="http://rwth-acis.github.io/Gamification-Gamifier-Frontend/js/lib/iwc.js"></script>
   <!-- import the client library -->
+  
+  <script src="http://rwth-acis.github.io/Gamification-Gamifier-Frontend/js/lib/y.js"></script>
+  <script src="http://rwth-acis.github.io/Gamification-Gamifier-Frontend/js/lib/y-array.js"></script>
+  <script src="http://rwth-acis.github.io/Gamification-Gamifier-Frontend/js/lib/y-text.js"></script>
+  <script src="http://rwth-acis.github.io/Gamification-Gamifier-Frontend/js/lib/y-websockets-client.js"></script>  
+  <script src="http://rwth-acis.github.io/Gamification-Gamifier-Frontend/js/lib/y-memory.js"></script>
   <script type="text/javascript" src="http://rwth-acis.github.io/Gamification-Gamifier-Frontend/js/lib/las2peerWidgetLibrary.js"></script>
   <script type="text/javascript" src="http://rwth-acis.github.io/Gamification-Gamifier-Frontend/js/lib/lodash.js"></script>
   <script type="text/javascript" src="http://rwth-acis.github.io/Gamification-Gamifier-Frontend/js/lib/oidc-widget.js"></script>
   <!-- import application script -->
-  <script type="text/javascript" src="http://rwth-acis.github.io/Gamification-Gamifier-Frontend/js/lib/FileSaver.js"></script>
   <script type="text/javascript" src="http://rwth-acis.github.io/Gamification-Gamifier-Frontend/js/client.js"></script>
   <script type="text/javascript" src="http://rwth-acis.github.io/Gamification-Gamifier-Frontend/js/applicationScript.js"></script>
   <script src="https://cdn.rawgit.com/beautify-web/js-beautify/v1.6.3/js/lib/beautify.js"></script>

@@ -65,12 +65,26 @@ var init = function() {
     var generatedJSON = generateJSON();
     generateJSfile(generatedJSON);
   });
-  // $('#clear-data').on('click', function() {
-  //   resetCurrentModel();
-  // })
-  // $('#store-data').on('click', function() {
-  //   storeModel();
-  // })
+  
+  Y({
+    db: {
+      name: 'memory'
+    },
+    connector: {
+      name: 'websockets-client',
+      room: 'cae-gamifier'
+    },
+    sourceDir: "http://y-js.org/bower_components",
+    share: {
+      appid:'Text',
+      newRepoName:'Text'
+    }
+  }).then(function (y) {
+    window.yTextarea = y
+
+    y.share.appid.bind(document.getElementById('appid'))
+    y.share.newRepoName.bind(document.getElementById('newRepoName'))
+  });
 }
 
 var useAuthentication = function(rurl){
