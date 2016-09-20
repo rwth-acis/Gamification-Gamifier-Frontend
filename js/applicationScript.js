@@ -61,10 +61,7 @@ var init = function() {
   //   var generatedJSON = generateJSON();
   //   saveJSONfile(generatedJSON);
   // });
-  $('#generate-repo').on('click', function() {
-    var generatedJSON = generateJSON();
-    generateJSfile(generatedJSON);
-  });
+  $('#generate-repo').on('click', generateButtonListener);
   
   Y({
     db: {
@@ -85,6 +82,11 @@ var init = function() {
     y.share.appid.bind(document.getElementById('appid'))
     y.share.newRepoName.bind(document.getElementById('newRepoName'))
   });
+}
+
+function generateButtonListener() {
+  var generatedJSON = generateJSON();
+  generateJSfile(generatedJSON);
 }
 
 var useAuthentication = function(rurl){
@@ -484,6 +486,9 @@ function generateJSfile(generatedJSON){
   };
   $("#status").val("Uploading files...");
   var dataJSON = JSON.stringify(dataJSON); 
+
+
+  $('#generate-repo').off('click');
   $.post(
     useAuthentication(epURL + "gamification/gamifier/repo"),
     dataJSON,
@@ -502,6 +507,9 @@ function generateJSfile(generatedJSON){
 
         generateSpace(newRepoName);
       }
+    }).always(function(){
+
+      $('#generate-repo').on('click', generateButtonListener);
     });
 }
 
