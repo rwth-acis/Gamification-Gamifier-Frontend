@@ -2,3 +2,24 @@
 margin-top:20px;
 width:100%;
 }
+
+.mmlib_table {
+  width: 100%;
+  font: bold 12pt arial,sans-serif;
+  /*background-color: #fff4c2;*/
+  border-collapse: separate;
+  border-spacing: 0px;
+  border-radius: 5px 5px;
+  padding: 3px 10px;
+  margin: 5px 5px;
+  z-index: 99999;
+  }
+
+.mmlib_xlink {
+  font: normal 1.1em arial,sans-serif;
+  font-weight: bold;
+  /*color: #0000cc;*/
+  cursor: pointer;
+  color:white;
+  z-index: 99999;
+  }

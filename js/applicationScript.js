@@ -32,8 +32,8 @@
 
  // global variables
 var client,
-    appId,
-    epURL = "http://gaudi.informatik.rwth-aachen.de:8081/",
+    gameId,
+    epURL = "http://gaudi.informatik.rwth-aachen.de:8086/",
     roleURL = "http://gaudi.informatik.rwth-aachen.de:8073/",
     gitHubURLGroup = "https://github.com/CAE-Gamified/",
     visualizationWidgetURL = "https://rwth-acis.github.io/Gamification-Visualization-Frontend/widget.xml",
@@ -41,21 +41,40 @@ var client,
     actiondata = [],
     feedbackTimeout,
     loadedModel = null,
-    repoName;
-    
+    repoName,
+    notification;
+
+function miniMessageAlert(msgObj,message,type){
+  var msg = msgObj.createTimerMessage(message, 5);
+  switch(type){
+    case "danger": msg.style.backgroundColor = "red";
+    break;
+    case "success": msg.style.backgroundColor = "green";
+    break;
+    default: msg.style.backgroundColor = "blue";
+  }
+  msg.style.color = "white";
+}
+
 var init = function() {
   var iwcCallback = function(intent) {
     console.log(intent);
   };
   client = new Las2peerWidgetLibrary(epURL, iwcCallback);
+  notification = new gadgets.MiniMessage("GAMEGAMIFIER");
 
   $('#load-data').on('click', function() {
-    if($("#appid").val()){    
+    if($("#gameid").val()){    
       loadData();
     }
     else{
-      feedback("App ID is not defined");
+      feedback("Game ID is not defined");
     }
+  });
+
+
+  $('#go-next-integrate-phase').on('click', function() {
+    setActiveTab(3);
   });
   // $('#generate-json').on('click', function() {
   //   var generatedJSON = generateJSON();
@@ -63,25 +82,7 @@ var init = function() {
   // });
   $('#generate-repo').on('click', generateButtonListener);
   
-  Y({
-    db: {
-      name: 'memory'
-    },
-    connector: {
-      name: 'websockets-client',
-      room: 'cae-gamifier'
-    },
-    sourceDir: "http://y-js.org/bower_components",
-    share: {
-      appid:'Text',
-      newRepoName:'Text'
-    }
-  }).then(function (y) {
-    window.yTextarea = y
 
-    y.share.appid.bind(document.getElementById('appid'))
-    y.share.newRepoName.bind(document.getElementById('newRepoName'))
-  });
 }
 
 function generateButtonListener() {
@@ -99,12 +100,19 @@ var useAuthentication = function(rurl){
   }
 
 function signinCallback(result) {
+  var contentTemplate = _.template($("#content").html());
+  var contentElmt = $(".content-wrapper");
+
     if(result === "success"){
       memberId = oidc_userinfo.preferred_username;
         
       console.log(oidc_userinfo);
+
+      contentElmt.html(contentTemplate);
       init();
     } else {
+
+      contentElmt.html("<div class=\"text-center\"><b>Unauthorized</b></div>");
       console.log(result);
       console.log(window.localStorage["access_token"]);
     }
@@ -152,24 +160,40 @@ function saveJSONfile(generatedJSON){
 }
 
 function loadData(){
-  appId = $("#appid").val();
+  gameId = $("#gameid").val();
   console.log("GET JSON");
   $.when(getActionData(),getModelData()).done(function(adata,jdata){
     renderTable(adata[0],jdata);
+    // Notify user and go to next section
+
+    feedback("Data loaded. Now match the data.")
+    setActiveTab(2)
+
   }).fail(function(error){
-    feedback("Error retrieving actions and event. " + error);
+    feedback("Error retrieving actions and event. " + error.responseText);
   });
 }
 
+function setActiveTab(tabNumber){
+  $('.tab-pane').removeClass("in");
+  $('.tab-pane').removeClass("active");
+  $('.tab-content').find('#'+tabNumber).addClass("in");
+  $('.tab-content').find('#'+tabNumber).addClass("active");
+
+
+  $('ul.pagination li').removeClass("active");
+  $('ul.pagination').find('a[href$="'+tabNumber+'"]').parent().addClass('active');
+}
+
 var getActionData = function(){
-  var endPointURL = epURL + "gamification/gamifier/actions/" + appId;
+  var endPointURL = epURL + "gamification/gamifier/actions/" + gameId;
   //var query = "?current=1&rowCount=-1&searchPhrase=";
-  feedback("Get Action Data");
+  feedback("Get Action Data..");
   return $.get(useAuthentication(endPointURL));
 };
 
 var getModelData = function() {
-  feedback("Get Model Data");
+  feedback("Get Model Data..");
   var d = $.Deferred();
     openapp.resource.get(openapp.param.space(), (function(space){
       console.log("Space " + JSON.stringify(space));
@@ -241,7 +265,7 @@ var renderTable = function(actiondata,eventdata){
       newRow += "</ul></td>";
       newRow += "<td><a class='clear'>clear</a></td>";
     }
-    newRow += "<tr class=\"text-center\"><td colspan=\"7\"><a id='clearall'>clear all</a></td>";
+    newRow += "<tr class=\"text-center\"><td colspan=\"7\" style=\"background-color:#ffffff\"><a id='clearall'>clear all</a></td>";
     $("table#relation").find("tbody").append(newRow);
     tableListener();
   }
@@ -480,7 +504,7 @@ function generateJSfile(generatedJSON){
   var dataJSON = {
     originRepositoryName: repoName, 
     newRepositoryName: newRepoName,
-    appId : appId,
+    gameId : gameId,
     epURL : epURL,
     aopScript : aopScript
   };
@@ -498,14 +522,18 @@ function generateJSfile(generatedJSON){
       //   var blob = new Blob([mainScript], {type: "text/plain;charset=utf-8"});
       // saveAs(blob, "gamifier.js");
 
-      $("a#urlRepo").html(gitHubURLGroup+repoName);
-      $("a#urlRepo").attr("href", gitHubURLGroup+repoName);
+      $("a#urlRepo").html(gitHubURLGroup+newRepoName);
+      $("a#urlRepo").attr("href", gitHubURLGroup+newRepoName);
 
       // Generate Space
       console.log($("#generate-space").prop("checked"));
       if($("#generate-space").prop("checked")){
 
         generateSpace(newRepoName);
+      }
+      else{
+
+        $("a#urlSpace").html(" - ");
       }
     }).always(function(){
 
@@ -578,6 +606,7 @@ function generateSpace(newRepoName){
       .done(function(){
         feedback("New Space Created");
 
+        feedback("Done");
         $("a#urlSpace").html(_spaceURI);
         $("a#urlSpace").attr("href", _spaceURI);
       }).fail(function(error){
@@ -594,9 +623,11 @@ $(document).ready(function() {
 
 // displays a message in the status box on the screen for the time of "feedbackTimeout"
 feedback = function(msg){
-    $("#status").val(msg);
+
+        $("#status").val(msg);
     clearTimeout(feedbackTimeout);
     feedbackTimeout = setTimeout(function(){
       $("#status").val("");
     },6000);
 };
+
