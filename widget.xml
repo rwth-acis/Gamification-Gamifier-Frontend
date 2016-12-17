@@ -35,7 +35,7 @@
   <!-- <script type="text/javascript" src="http://open-app.googlecode.com/files/openapp.js"></script> -->
   <!-- inter widget communication library import -->
   
-   <script type="text/javascript" src="https://rwth-acis.github.io/Gamification-Gamifier-Frontend/gamifier_game/js/lib/iwc.js"></script>
+   <script type="text/javascript" src="https://rwth-acis.github.io/Gamification-Gamifier-Frontend/js/lib/iwc.js"></script>
   <!-- import the client library -->
   
   <script type="text/javascript" src="https://rwth-acis.github.io/Gamification-Gamifier-Frontend/js/lib/las2peerWidgetLibrary.js"></script>
